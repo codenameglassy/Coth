@@ -1,0 +1,7 @@
+-Weapon Wheel Mvp(Placeholder graphic).
+-Gpu Instancing Trees and Grass, Frustum/Occlusion Culling, Chunck Loading.
+-Bowl Interaction prototype.
+
+-Working on staff movement, staff elemental mechanics and bowl mechanics.
+-Working on gamefeel
+-Procedurally generated Terrain.

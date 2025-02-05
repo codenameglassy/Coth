@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 32ed9a60da7dead449597d9a77892e9c, type: 3}
+  m_Name: newPlayerEntityData
+  m_EditorClassIdentifier: 
+  attackDeltaDistance: 1.2
+  checkEnemyRange: 2.5
+  whatIsEnemy:
+    serializedVersion: 2
+    m_Bits: 128
+  attackRange: 0.6
+  prayVfxPrefab: {fileID: 4040843940766490344, guid: d14726220afc2bc4caa953c30bf86e67,
+    type: 3}
+  prayPulseVfxPrefab: {fileID: 3326989804734834750, guid: 562042d048b1e494e8e3ec9e02695a75,
+    type: 3}
+  prayvfxRotaion: {x: -0.70710677, y: 0, z: 0, w: 0.70710677}
+  whatIsPrayInteract:
+    serializedVersion: 2
+    m_Bits: 8192
+  interactRange: 2
+  castControlVfx: {fileID: 3145955356813436389, guid: 3eeadb4d53816e148aacdeb5f4ee6adb,
+    type: 3}

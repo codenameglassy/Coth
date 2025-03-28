@@ -11,6 +11,7 @@ public class PlayerPrayState : PlayerState
     public override void Enter()
     {
         base.Enter();
+        AudioManagerCS.instance.Play("sing");
         entity.SetMovement(false);
         entity.SpawnPrayVfxRoutine();
     }

@@ -8,6 +8,7 @@ public class PlayerStateData : ScriptableObject
    
     public float dodgeTime;
     public float attackTime;
+    public float rangeAttackTime;
 
     [Header("Interaction")]
     public float prayTime;

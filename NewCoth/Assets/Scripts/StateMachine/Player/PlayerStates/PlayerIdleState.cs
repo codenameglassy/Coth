@@ -29,32 +29,39 @@ public class PlayerIdleState : PlayerState
         base.LogicUpdate();
 
         entity.InputSwitchToStaff();
-
         entity.HandlePrayInput();
+        entity.CheckSwitchToGlideState();
 
-        if (Input.GetKeyDown(KeyCode.R))
+       /* if (Input.GetKeyDown(KeyCode.R))
         {
             entity.stateMachine.ChangeState(entity.castControlState);
+        }*/
+
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            entity.stateMachine.ChangeState(entity.skatingState);
         }
 
-        if (Input.GetKeyDown(KeyCode.Space))
+        /* if (Input.GetKeyDown(KeyCode.Space))
+         {
+             entity.stateMachine.ChangeState(entity.dodgeForwardState);
+         }*/
+
+      /*  if (Input.GetMouseButtonDown(0))
         {
-            entity.stateMachine.ChangeState(entity.dodgeForwardState);
+            entity.Chant();
         }
 
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(1))
         {
-            if (!entity.CheckEnemyInRange())
-            {
-                Debug.Log("No enemy in range!");
-                return;
-            }
-            entity.stateMachine.ChangeState(entity.attackState);
-        }
+            entity.stateMachine.ChangeState(entity.pushingState);
+        }*/
+
     }
 
     public override void PhysicsUpdate()
     {
         base.PhysicsUpdate();
+        entity.CheckLoots();
     }
 }

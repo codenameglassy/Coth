@@ -6,78 +6,77 @@ using StarterAssets;
 using UnityEngine.InputSystem;
 using DG.Tweening;
 
+
 public class ControableEntityManager : MonoBehaviour
 {
 
     public static ControableEntityManager instance;
 
-    [Header("Animators")]
-    public Animator tigerAnimator;
-    public Animator playerAnimator;
-
-    [Header("Parent Game-Object")]
-    public GameObject tigerGO;
-    public GameObject playerGO;
-
-    [Header("Controllers")]
-    public ControableEntity tigerController;
-    public PlayerEntity playerEntity;
-
-    [Header("Camera-Roots")]
-    public Transform tigerCameraRoot;
-    public Transform playerCameraRoot;
-
-
-    [Header("Components")]
-    public CinemachineVirtualCamera virtualCamera;
-    public float changeTime;
-    public GameObject changeVfx;
-    public Quaternion vfxRotation;
-
-    [Header("Dev")]
+    [Header("Game Objects")]
+    public GameObject playerGo;
+    public GameObject tigerGo;
     public GameObject tigerStatue;
-    public GameObject trailVfx;
+    public GameObject waveGo;
 
+    [Header("Entity")]
+    public PlayerEntity playerEntity;
+    public ControableEntity tigerEntity;
+    public WaveController waveEntity;
+
+    public Vector3 wavePosOffset;
     private void Awake()
     {
         instance = this;
+    }
+    private void Start()
+    {
+        waveGo.SetActive(false);
+    }
+    public void SpawnWave()
+    {
+        StartCoroutine(Enum_SpawnWave());
+    }
+    
+    IEnumerator Enum_SpawnWave()
+    {
+
+        // Offset the spawn position
+        Vector3 waveFinalPos = playerEntity.transform.position + wavePosOffset;
+        waveEntity.transform.position = waveFinalPos;
+        yield return null;
+        waveGo.SetActive(true);
+      
     }
 
     public void ControlTiger()
     {
         StartCoroutine(Enum_ControlTiger());
     }
-
+ 
     IEnumerator Enum_ControlTiger()
     {
-        tigerStatue.gameObject.SetActive(false);
-        tigerGO.transform.position = tigerStatue.transform.position;
-        tigerGO.transform.rotation = tigerStatue.transform.rotation;
-        playerEntity.GetComponent<PlayerInput>().enabled = false;
-        //tigerGO.transform.position = playerGO.transform.position;
-        //tigerGO.transform.rotation = playerGO.transform.rotation;
-
         yield return null;
+        tigerStatue.SetActive(false);
+        playerGo.SetActive(false);
+        waveGo.SetActive(false);
+        AudioManagerCS.instance.Play("tigerRoar");
+        tigerGo.SetActive(true);
 
-        //playerGO.SetActive(false);
+
+      /*  waveGo.SetActive(false);
+        tigerStatue.SetActive(false);
+        playerGo.SetActive(false);
+      
        
-        tigerGO.SetActive(true);
+        tigerGo.SetActive(true);
+        yield return new WaitForSeconds(.5f);
+        waveVcam.Priority = 0;
+        tigerVcam.Priority = 10;
+        AudioManagerCS.instance.Play("tigerRoar");
+        yield return new WaitForSeconds(.5f);*/
      
-
-        virtualCamera.Follow = tigerCameraRoot;
-        Instantiate(changeVfx, tigerGO.transform.position, vfxRotation);
-        //GameObject trailVfxGO = Instantiate(trailVfx, playerGO.transform.position, vfxRotation);
-        //trailVfxGO.transform.DOMove(tigerStatue.transform.position, 1f);
-
-        yield return new WaitForSeconds(changeTime);
-
-        
-        playerEntity.stateMachine.ChangeState(playerEntity.sleepState);
-        
-        tigerController.stateMachine.ChangeState(tigerController.idleState);
-        PlayerManaManager.instance.isUsingMana = true;
+       
     }
-
     public void ControlPlayer()
     {
         StartCoroutine(Enum_ControlPlayer());
@@ -85,31 +84,16 @@ public class ControableEntityManager : MonoBehaviour
 
     IEnumerator Enum_ControlPlayer()
     {
-        //playerGO.transform.position = tigerGO.transform.position;
-        //playerGO.transform.rotation = tigerGO.transform.rotation;
-        
         yield return null;
-
-        tigerStatue.SetActive(true);
-        tigerGO.SetActive(false);
-
-        playerEntity.GetComponent<PlayerInput>().enabled = true;
-
-        yield return null;
-        playerGO.SetActive(true);
-
-        virtualCamera.Follow = playerCameraRoot;
-        Instantiate(changeVfx, playerGO.transform.position, vfxRotation);
        
-        yield return new WaitForSeconds(changeTime);
-        playerEntity.stateMachine.ChangeState(playerEntity.waitState);
-        PlayerManaManager.instance.isUsingMana = false;
-    }
+        tigerStatue.transform.position = tigerEntity.transform.position;
+        tigerGo.SetActive(false);
+        tigerStatue.SetActive(true);
+        playerGo.SetActive(true);
 
-    public void DisablePlayerInput()
-    {
-        playerEntity.GetComponent<ThirdPersonController>().enabled = false;
-        
+        //reset
+        playerEntity.InitializeIdle();
+        waveEntity.ResetWave();
+
     }
-  
 }

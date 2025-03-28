@@ -5,5 +5,6 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "newControableEntityData", menuName = "EntityData/Controable/ControableEntityData")]
 public class ControableEntityData : ScriptableObject
 {
- 
+    public LayerMask whatIsDestructable;
+    public float checkDestructableRadius;
 }

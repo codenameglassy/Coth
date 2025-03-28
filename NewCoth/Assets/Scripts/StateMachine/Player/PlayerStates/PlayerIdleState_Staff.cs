@@ -12,6 +12,7 @@ public class PlayerIdleState_Staff : PlayerState
     {
         base.Enter();
         entity.SetMovement(true);
+       
     }
 
     public override void Exit()
@@ -24,10 +25,21 @@ public class PlayerIdleState_Staff : PlayerState
         base.LogicUpdate();
         entity.InputSwitchToUnarm();
         entity.HandleStaffInteractInput();
+        entity.DodgeForward();
 
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             entity.InfuseWater();
+        }
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            entity.stateMachine.ChangeState(entity.attackState);
+        }
+
+        if (Input.GetMouseButtonDown(1))
+        {
+            entity.stateMachine.ChangeState(entity.rangeAttackState);
         }
     }
 

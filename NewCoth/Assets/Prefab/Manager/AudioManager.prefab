@@ -1,0 +1,146 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1465428574338518457
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8372743339922626717}
+  - component: {fileID: 6779221905910249049}
+  m_Layer: 0
+  m_Name: AudioManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8372743339922626717
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1465428574338518457}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6779221905910249049
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1465428574338518457}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a2e2639e153e8884492a6ad5f96fc7bf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sounds:
+  - name: forest
+    clip: {fileID: 8300000, guid: 253e0138ab9ea684cbf525f37923b595, type: 3}
+    volume: 0.7
+    pitch: 1
+    isLoop: 1
+    tag: 1
+    source: {fileID: 0}
+  - name: chime
+    clip: {fileID: 8300000, guid: b490996f57cee4c47b4edd6418908734, type: 3}
+    volume: 0.8
+    pitch: 1
+    isLoop: 0
+    tag: 1
+    source: {fileID: 0}
+  - name: playerHitSwing
+    clip: {fileID: 8300000, guid: f94a6e16e73443944afa7f83e4118349, type: 3}
+    volume: 0.8
+    pitch: 1
+    isLoop: 0
+    tag: 0
+    source: {fileID: 0}
+  - name: enemyHitSwing
+    clip: {fileID: 8300000, guid: 3124ea185a123e643b13753c344db2ad, type: 3}
+    volume: 0.8
+    pitch: 1
+    isLoop: 0
+    tag: 0
+    source: {fileID: 0}
+  - name: manaLoot
+    clip: {fileID: 8300000, guid: 21d560b975c342f4f90cea93f4e61d1e, type: 3}
+    volume: 0.6
+    pitch: 1
+    isLoop: 0
+    tag: 0
+    source: {fileID: 0}
+  - name: heavyMove
+    clip: {fileID: 8300000, guid: a12f4acb09f99924880908f684837a55, type: 3}
+    volume: 0.8
+    pitch: 1
+    isLoop: 0
+    tag: 0
+    source: {fileID: 0}
+  - name: sing
+    clip: {fileID: 8300000, guid: 21ea17b17f2229749be81e1bf8a720a1, type: 3}
+    volume: 0.9
+    pitch: 1
+    isLoop: 0
+    tag: 0
+    source: {fileID: 0}
+  - name: woodBreak
+    clip: {fileID: 8300000, guid: ef5c8968850f7dc4d997f4d452c6e6a8, type: 3}
+    volume: 0.5
+    pitch: 1
+    isLoop: 0
+    tag: 0
+    source: {fileID: 0}
+  - name: tigerRoar
+    clip: {fileID: 8300000, guid: 97fe4bd6e82a0d6499c18e2b7db5a67d, type: 3}
+    volume: 0.7
+    pitch: 1
+    isLoop: 0
+    tag: 0
+    source: {fileID: 0}
+  - name: boyJump
+    clip: {fileID: 8300000, guid: 46f1e9c565f78df4eba878d592a7d72d, type: 3}
+    volume: 0.7
+    pitch: 1
+    isLoop: 0
+    tag: 0
+    source: {fileID: 0}
+  - name: boyLand
+    clip: {fileID: 8300000, guid: a699798ed39af55488ab0808de615286, type: 3}
+    volume: 0.46
+    pitch: 1
+    isLoop: 0
+    tag: 0
+    source: {fileID: 0}
+  - name: glide
+    clip: {fileID: 8300000, guid: 306bbdff3b6e24d469a79346b61344b1, type: 3}
+    volume: 0.6
+    pitch: 1
+    isLoop: 0
+    tag: 0
+    source: {fileID: 0}
+  - name: swoosh
+    clip: {fileID: 8300000, guid: e79242204f6acb1429bfe277bddc17db, type: 3}
+    volume: 0.6
+    pitch: 1
+    isLoop: 0
+    tag: 0
+    source: {fileID: 0}
+  - name: zoomOut
+    clip: {fileID: 8300000, guid: 7c680542c73d9944e95f456b109dd7c3, type: 3}
+    volume: 0.8
+    pitch: 1
+    isLoop: 0
+    tag: 0
+    source: {fileID: 0}
+  masterVolume: 1

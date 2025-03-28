@@ -806,7 +806,7 @@ PlayerSettings:
   webGLMemoryGeometricGrowthCap: 96
   webGLPowerPreference: 2
   scriptingDefineSymbols:
-    Android: DOTWEEN;CROSS_PLATFORM_INPUT;MOBILE_INPUT;GAIA_MESH_PRESENT;FLORA_PRESENT
+    Android: DOTWEEN;CROSS_PLATFORM_INPUT;MOBILE_INPUT;GAIA_MESH_PRESENT;FLORA_PRESENT;MAGICACLOTH2
     EmbeddedLinux: DOTWEEN
     GameCoreScarlett: DOTWEEN
     GameCoreXboxOne: DOTWEEN

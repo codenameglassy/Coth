@@ -21,4 +21,21 @@ public class PlayerEntityData : ScriptableObject
 
     [Header("Control - Interactive")]
     public GameObject castControlVfx;
+
+    [Header("Range Attack")]
+    public GameObject rangeAttackVfxPrefab;
+    public Quaternion rangeAttackVfxRotation;
+
+    [Header("Loots")]
+    public float lootRange;
+    public LayerMask whatIsLootable;
+
+    [Header("Propelled Jump")]
+    public float propelledJumpHeight;
+    public LayerMask whatIsPropelledJumpArea;
+    public float propelledJumpCheckRadius;
+
+    [Header("Chant")]
+    public GameObject chantVfxPrefab;
+
 }

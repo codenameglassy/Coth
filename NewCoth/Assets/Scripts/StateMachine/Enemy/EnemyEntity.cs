@@ -115,7 +115,7 @@ public class EnemyEntity : MonoBehaviour
     public void TryAttack()
     {
         bool isPlayerInAttackRange = Physics.CheckSphere(attackPos.position, enemyData.attackRange, enemyData.whatIsPlayer);
-
+        AudioManagerCS.instance.Play("enemyHitSwing");
         if (isPlayerInAttackRange)
         {
             target.GetComponent<IDamageable>().Takedamage(10);

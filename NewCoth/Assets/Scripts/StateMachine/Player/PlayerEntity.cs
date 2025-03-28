@@ -11,6 +11,7 @@ public class PlayerEntity : MonoBehaviour
     public PlayerFiniteStateMachine stateMachine { get; private set; }
 
     //States
+    #region Player States
     public PlayerIdleState idleState { get; private set; }
     public PlayerDodgeForwardState dodgeForwardState { get; private set; }
     public PlayerAttackState attackState { get; private set; }
@@ -24,10 +25,15 @@ public class PlayerEntity : MonoBehaviour
     public PlayerWakeUpState wakeUpState { get; private set; }
     public PlayerWaitState waitState { get; private set; }
     public PlayerSleepState sleepState { get; private set; }
+    public PlayerRangeAttackState rangeAttackState { get; private set; }
+    public PlayerGlideState glideState { get; private set; }
+    public PlayerSkatingState skatingState { get; private set; }
+    public PlayerPushingState pushingState { get; private set; }
+    #endregion
 
     [Header("Components")]
     [SerializeField] private PlayerStateData stateData;
-    [SerializeField] private PlayerEntityData entityData;
+    public PlayerEntityData entityData;
     [SerializeField] private ThirdPersonController thirdPersonController;
 
     [Header("Check Surroundings")]
@@ -39,6 +45,7 @@ public class PlayerEntity : MonoBehaviour
 
     [Header("Attack")]
     public Transform attackPos;
+    public Transform rangeAttackPos;
 
     [Header("Pray")]
     public Transform prayVfxSpawnPos;
@@ -49,18 +56,7 @@ public class PlayerEntity : MonoBehaviour
     [Header("Elemental")]
     public GameObject water;
 
-    [Header("Controable")]
-    public GameObject tigerController;
-    public GameObject playerController;
-    public Transform tigerControllerCameraRoot;
-    public Transform playerControllerCameraRoot;
-
-    [Header("Cinemachine")]
-    public CinemachineVirtualCamera virtualCamera;
-    public float zoomInSize;
-    public float zoomOutSize;
-    public float zoomTime = 2f;
-    private Coroutine currentZoomCoroutine;
+   
 
     private void Awake()
     {
@@ -81,13 +77,17 @@ public class PlayerEntity : MonoBehaviour
         wakeUpState = new PlayerWakeUpState(this, stateMachine, stateData, "wakeUp");
         waitState = new PlayerWaitState(this, stateMachine, stateData, "wait");
         sleepState = new PlayerSleepState(this, stateMachine, stateData, "sleep");
+        rangeAttackState = new PlayerRangeAttackState(this, stateMachine, stateData, "rangeAttack");
+        glideState = new PlayerGlideState(this, stateMachine, stateData, "glide");
+        skatingState = new PlayerSkatingState(this, stateMachine, stateData, "skate");
+        pushingState = new PlayerPushingState(this, stateMachine, stateData, "push");
 
         stateMachine.Initialize(idleState);
     }
     // Start is called before the first frame update
     void Start()
     {
-        SmoothZoom(zoomInSize, zoomTime);
+        
     }
 
     // Update is called once per frame
@@ -106,48 +106,7 @@ public class PlayerEntity : MonoBehaviour
         thirdPersonController.canMove = bool_;
     }
 
-    #region Cinemachine
-    public void SetNewFollowCameraRoot(Transform newCameraRoot)
-    {
-        virtualCamera.Follow = newCameraRoot;
-    }
-
-    public void SmoothZoom(float targetSize, float duration)
-    {
-        if (virtualCamera != null)
-        {
-            // Stop any ongoing zoom coroutine
-            if (currentZoomCoroutine != null)
-            {
-                StopCoroutine(currentZoomCoroutine);
-            }
-
-            // Start a new zoom coroutine
-            currentZoomCoroutine = StartCoroutine(ZoomToSize(targetSize, duration));
-        }
-    }
-
-    private IEnumerator ZoomToSize(float targetSize, float duration)
-    {
-        float startSize = virtualCamera.m_Lens.OrthographicSize;
-        float elapsedTime = 0f;
-
-        while (elapsedTime < duration)
-        {
-            elapsedTime += Time.deltaTime;
-            float t = elapsedTime / duration; // Normalize elapsed time to [0, 1]
-            virtualCamera.m_Lens.OrthographicSize = Mathf.Lerp(startSize, targetSize, t);
-            yield return null;
-        }
-
-        // Ensure the final size is set
-        virtualCamera.m_Lens.OrthographicSize = targetSize;
-    }
-
-
-    #endregion
-
-   
+    
     #region Dodge
     public void DodgeForward()
     {
@@ -197,7 +156,24 @@ public class PlayerEntity : MonoBehaviour
     #endregion
 
     #region Check Surroundings
+    public void TryDestruct()
+    {
+        Collider[] destructables = Physics.OverlapSphere(attackPos.position, .5f, entityData.whatIsEnemy);
+        //AudioManagerCS.instance.Play("playerHitSwing");
 
+        if (destructables.Length >= 1)
+        {
+            foreach (Collider destructable in destructables)
+            {
+                IDamageable enemyHp = destructable.GetComponent<IDamageable>();
+                if (enemyHp != null)
+                {
+                    enemyHp.Takedamage(1);
+                }
+
+            }
+        }
+    }
     public bool CheckEnemyInRange()
     {
         bool isEnemyInRange = Physics.CheckSphere(checkEnemyPos.position, entityData.checkEnemyRange, entityData.whatIsEnemy);
@@ -225,6 +201,23 @@ public class PlayerEntity : MonoBehaviour
         }
     }
 
+    public void CheckLoots()
+    {
+        Collider[] loots = Physics.OverlapSphere(transform.position, entityData.lootRange, entityData.whatIsLootable);
+
+        if(loots.Length >= 1)
+        {
+            foreach (Collider item in loots)
+            {
+                ILoot loot = item.GetComponent<ILoot>();
+                if(loot != null)
+                {
+                    loot.Loot(gameObject);
+                }
+            }
+        }
+    }
+
     #endregion
 
     #region Attack
@@ -232,6 +225,7 @@ public class PlayerEntity : MonoBehaviour
     public void TryAttack()
     {
         Collider[] enemies = Physics.OverlapSphere(attackPos.position, entityData.attackRange, entityData.whatIsEnemy);
+        AudioManagerCS.instance.Play("playerHitSwing");
 
         if (enemies.Length >= 1)
         {
@@ -245,6 +239,12 @@ public class PlayerEntity : MonoBehaviour
 
             }
         }
+    }
+
+    public void RangeAttack()
+    {
+        //Quaternion rotation = transform.rotation * Quaternion.Euler(0, 180, 0);
+        Instantiate(entityData.rangeAttackVfxPrefab, rangeAttackPos.position, transform.rotation);
     }
     #endregion
 
@@ -270,13 +270,12 @@ public class PlayerEntity : MonoBehaviour
 
         yield return new WaitForSeconds(1f);
         SpawnPrayVfx();
+        AlterInteract();
         yield return new WaitForSeconds(1f);
-        SpawnPrayVfx();
-        yield return new WaitForSeconds(1f);
-        SpawnPrayVfx();
+       
 
         yield return new WaitForSeconds(.5f);
-        AlterInteract();
+       
         Instantiate(entityData.prayPulseVfxPrefab, prayVfxSpawnPos.position, entityData.prayvfxRotaion);
        
     }
@@ -351,6 +350,62 @@ public class PlayerEntity : MonoBehaviour
         water.SetActive(true);
     }
     #endregion
+
+    #region Glide
+    public void HandleGlide()
+    {
+       thirdPersonController.HandleGlide();
+    }
+
+    public void CheckSwitchToGlideState()
+    {
+        if(!thirdPersonController.IsGrounded() && Input.GetKeyDown(KeyCode.Space) && thirdPersonController.JumpTimeoutDelta() >= 0.2f)
+        {
+            stateMachine.ChangeState(glideState);
+        }
+    }
+
+   public void CheckGroundWhileGliding()
+    {
+        if (thirdPersonController.IsGrounded())
+        {
+            Debug.Log("Touching ground, Glidding off");
+            stateMachine.ChangeState(idleState);
+        }
+    }
+
+    #endregion
+
+    #region Propelled Jump
+
+    public bool CheckIfPropelledJump()
+    {
+        bool isTouchingPropelledJumpArea = Physics.CheckSphere(transform.position, entityData.propelledJumpCheckRadius, entityData.whatIsPropelledJumpArea);
+        return isTouchingPropelledJumpArea;
+    }
+
+    #endregion
+
+    #region Chant
+    public void Chant()
+    {
+        Instantiate(entityData.chantVfxPrefab, transform.position, Quaternion.identity);
+    }
+    #endregion
+
+    #region Push
+    public GameObject pushGo;
+    public Transform pushPos;
+    public void TryPush()
+    {
+        transform.DOMove(pushPos.position, 1f);
+    }
+    #endregion
+
+    public void InitializeIdle()
+    {
+        stateMachine.ChangeState(idleState);
+    }
    
     public void OverrideAnimationController(RuntimeAnimatorController newController)
     {
@@ -394,6 +449,11 @@ public class PlayerEntity : MonoBehaviour
         }
 
         return closest;
+    }
+
+    public ThirdPersonController GetThirdPersonController()
+    {
+        return thirdPersonController;
     }
 
     private void OnDrawGizmos()

@@ -12,7 +12,7 @@ public class EnemySpawnManager : MonoBehaviour
     [Header("Spawn Positions")]
     public List<Transform> enemySpawnPos = new List<Transform>();
 
-    [Header("patorl")]
+    [Header("Patrol Points")]
     public List<Transform> patrolPos = new List<Transform>();
 
     [Header("Active Enemy In Scene")]
@@ -33,7 +33,7 @@ public class EnemySpawnManager : MonoBehaviour
     {
         int index = Random.Range(0, enemySpawnPos.Count);
 
-        Instantiate(pigButcher, enemySpawnPos[index].position, Quaternion.identity);
+        Instantiate(enemy, enemySpawnPos[index].position, Quaternion.identity);
     }
 
     public void SpawnPigButcher()

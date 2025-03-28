@@ -19,19 +19,9 @@ public class ControableEntity : MonoBehaviour
     [SerializeField] private ControableEntityData entityData;
     [SerializeField] private ThirdPersonController thirdPersonController;
 
-    [Header("Cinemachine")]
-    public CinemachineVirtualCamera virtualCamera;
-    public float zoomInSize;
-    public float zoomOutSize;
-    public float zoomTime = 2f;
-    private Coroutine currentZoomCoroutine;
-
-    [Header("Controable")]
-    public GameObject tigerController;
-    public GameObject playerController;
-    public Transform tigerControllerCameraRoot;
-    public Transform playerControllerCameraRoot;
-
+    [Header("Check Environment")]
+    public GameObject checkDestructablePos;
+  
     private void Start()
     {
         anim = GetComponent<Animator>();
@@ -60,44 +50,39 @@ public class ControableEntity : MonoBehaviour
         thirdPersonController.canMove = bool_;
     }
 
-    #region Cinemachine
-    public void SmoothZoom(float targetSize, float duration)
+
+
+    #region Destructables
+    public void CheckDestructables()
     {
-        if (virtualCamera != null)
+        TryDestruct();
+    }
+    public void TryDestruct()
+    {
+        Collider[] destructables = Physics.OverlapSphere(checkDestructablePos.transform.position, .5f, entityData.whatIsDestructable);
+        //AudioManagerCS.instance.Play("playerHitSwing");
+
+        if (destructables.Length >= 1)
         {
-            // Stop any ongoing zoom coroutine
-            if (currentZoomCoroutine != null)
+            foreach (Collider destructable in destructables)
             {
-                StopCoroutine(currentZoomCoroutine);
+                IDamageable enemyHp = destructable.GetComponent<IDamageable>();
+                if (enemyHp != null)
+                {
+                    enemyHp.Takedamage(1);
+                }
+
             }
-
-            // Start a new zoom coroutine
-            currentZoomCoroutine = StartCoroutine(ZoomToSize(targetSize, duration));
         }
-    }
-
-
-    private IEnumerator ZoomToSize(float targetSize, float duration)
-    {
-        float startSize = virtualCamera.m_Lens.OrthographicSize;
-        float elapsedTime = 0f;
-
-        while (elapsedTime < duration)
-        {
-            elapsedTime += Time.deltaTime;
-            float t = elapsedTime / duration; // Normalize elapsed time to [0, 1]
-            virtualCamera.m_Lens.OrthographicSize = Mathf.Lerp(startSize, targetSize, t);
-            yield return null;
-        }
-
-        // Ensure the final size is set
-        virtualCamera.m_Lens.OrthographicSize = targetSize;
-    }
-    public void SetNewFollowCameraRoot(Transform newCameraRoot)
-    {
-        virtualCamera.Follow = newCameraRoot;
     }
 
     #endregion
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawWireSphere(checkDestructablePos.transform.position, entityData.checkDestructableRadius);
+    }
+
+
 
 }

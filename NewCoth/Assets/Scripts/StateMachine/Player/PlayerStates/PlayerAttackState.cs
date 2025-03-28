@@ -29,7 +29,7 @@ public class PlayerAttackState : PlayerState
 
         if(Time.time>= startTime + stateData.attackTime)
         {
-            entity.stateMachine.ChangeState(entity.idleState);
+            entity.stateMachine.ChangeState(entity.idleState_Staff);
         }
     }
 

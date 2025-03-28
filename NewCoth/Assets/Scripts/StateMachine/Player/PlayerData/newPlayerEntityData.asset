@@ -18,9 +18,9 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 128
   attackRange: 0.6
-  prayVfxPrefab: {fileID: 4040843940766490344, guid: d14726220afc2bc4caa953c30bf86e67,
+  prayVfxPrefab: {fileID: 4040843940766490344, guid: 5c83fdc0b9185204c840d967596e3cb2,
     type: 3}
-  prayPulseVfxPrefab: {fileID: 3326989804734834750, guid: 562042d048b1e494e8e3ec9e02695a75,
+  prayPulseVfxPrefab: {fileID: 4040843940766490344, guid: 5c83fdc0b9185204c840d967596e3cb2,
     type: 3}
   prayvfxRotaion: {x: -0.70710677, y: 0, z: 0, w: 0.70710677}
   whatIsPrayInteract:
@@ -28,4 +28,18 @@ MonoBehaviour:
     m_Bits: 8192
   interactRange: 2
   castControlVfx: {fileID: 3145955356813436389, guid: 3eeadb4d53816e148aacdeb5f4ee6adb,
+    type: 3}
+  rangeAttackVfxPrefab: {fileID: 5498325870557180919, guid: 331112423ef363d449931466a775e3dd,
+    type: 3}
+  rangeAttackVfxRotation: {x: 1, y: 0, z: 0, w: -0.00000004371139}
+  lootRange: 0.5
+  whatIsLootable:
+    serializedVersion: 2
+    m_Bits: 512
+  propelledJumpHeight: 12
+  whatIsPropelledJumpArea:
+    serializedVersion: 2
+    m_Bits: 32768
+  propelledJumpCheckRadius: 1
+  chantVfxPrefab: {fileID: 240778696249066218, guid: df69e16a6712fd443bef71f2802bb688,
     type: 3}

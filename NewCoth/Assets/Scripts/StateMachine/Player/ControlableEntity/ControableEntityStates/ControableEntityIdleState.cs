@@ -13,7 +13,7 @@ public class ControableEntityIdleState : ControableEntityState
     {
         base.Enter();
         entity.SetMovement(true);
-        entity.SmoothZoom(entity.zoomOutSize, entity.zoomTime);
+       // entity.SmoothZoom(entity.zoomOutSize, entity.zoomTime);
 
     }
     
@@ -26,7 +26,7 @@ public class ControableEntityIdleState : ControableEntityState
     {
         base.LogicUpdate();
 
-        if(PlayerManaManager.instance.CurrentMana() <= 0)
+      /*  if(PlayerManaManager.instance.CurrentMana() <= 0)
         {
             entity.stateMachine.ChangeState(entity.revertToPlayer);
         }
@@ -34,11 +34,19 @@ public class ControableEntityIdleState : ControableEntityState
         if (Input.GetKeyDown(KeyCode.R))
         {
             entity.stateMachine.ChangeState(entity.revertToPlayer);
-        }
+        }*/
     }
 
     public override void PhysicsUpdate()
     {
         base.PhysicsUpdate();
+
+        entity.CheckDestructables();
+
+        if(PlayerManaManager.instance.CurrentMana() <= 0)
+        {
+            entity.stateMachine.ChangeState(entity.revertToPlayer);
+        }
+        PlayerManaManager.instance.RemoveMana(0.25f);
     }
 }

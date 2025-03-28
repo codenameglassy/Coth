@@ -5,6 +5,9 @@ using UnityEngine.UI;
 
 public class WeaponWheelManager : MonoBehaviour
 {
+    public GameObject weaponWheelCanvas;
+    public GameObject orbGO;
+
     public GameObject[] weapons; // Array to hold your weapon GameObjects
     public Image[] weaponIcons; // UI Icons for the weapon wheel
     public KeyCode weaponWheelKey = KeyCode.Tab; // Key to open weapon wheel
@@ -14,6 +17,17 @@ public class WeaponWheelManager : MonoBehaviour
 
     void Start()
     {
+        InitializeWeapons();
+    }
+
+    void Update()
+    {
+        HandleWeaponWheelInput();
+        HandleWeaponSwitchInput();
+    }
+
+    private void InitializeWeapons()
+    {
         // Initialize all weapons and set only the first weapon active
         for (int i = 0; i < weapons.Length; i++)
         {
@@ -21,15 +35,40 @@ public class WeaponWheelManager : MonoBehaviour
         }
     }
 
-    void Update()
+    private void HandleWeaponWheelInput()
     {
         // Toggle weapon wheel UI
         if (Input.GetKeyDown(weaponWheelKey))
         {
-            isWeaponWheelActive = !isWeaponWheelActive;
-            UpdateWeaponWheelUI();
+            ToggleWeaponWheel();
+        }
+    }
+
+    private void ToggleWeaponWheel()
+    {
+        isWeaponWheelActive = !isWeaponWheelActive;
+        weaponWheelCanvas.SetActive(isWeaponWheelActive);
+        if (!isWeaponWheelActive)
+        {
+            orbGO.SetActive(true);
+        }
+        else
+        {
+            //orbGO.SetActive(false);
+            StartCoroutine(Enum_SelectOrb());
         }
 
+        UpdateWeaponWheelUI();
+    }
+
+    IEnumerator Enum_SelectOrb()
+    {
+        yield return new WaitForSeconds(6f);
+        orbGO.SetActive(false);
+    }
+
+    private void HandleWeaponSwitchInput()
+    {
         if (isWeaponWheelActive)
         {
             // Use mouse scroll or number keys to navigate the weapon wheel
@@ -74,6 +113,10 @@ public class WeaponWheelManager : MonoBehaviour
             {
                 weaponIcons[i].color = (i == currentWeaponIndex) ? Color.white : Color.gray; // Highlight selected weapon
             }
+        }
+        else
+        {
+            Debug.LogError("Weapon icons array length does not match weapons array length.");
         }
     }
 }

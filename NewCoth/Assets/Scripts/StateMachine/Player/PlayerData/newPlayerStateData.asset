@@ -14,8 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dodgeTime: 0.4
   attackTime: 0.8
-  prayTime: 4
-  castControlTime: 3
+  rangeAttackTime: 1
+  prayTime: 6
+  castControlTime: 1
   wakeUpTime: 0.8
   sheatheTime: 1
   unSheatheTime: 0.7

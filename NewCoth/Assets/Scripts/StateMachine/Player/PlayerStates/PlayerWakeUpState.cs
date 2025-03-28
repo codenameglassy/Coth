@@ -12,7 +12,7 @@ public class PlayerWakeUpState : PlayerState
     {
         base.Enter();
         entity.SetMovement(false);
-        entity.SmoothZoom(entity.zoomInSize, entity.zoomTime);
+       
     }
 
     public override void Exit()

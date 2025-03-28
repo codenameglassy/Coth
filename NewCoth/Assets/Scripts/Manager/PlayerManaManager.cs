@@ -17,6 +17,10 @@ public class PlayerManaManager : MonoBehaviour
     public bool isUsingMana;
     public float manaCost;
 
+    [Header("Scarf")]
+    public GameObject[] gameObjects; // Array of game objects to be activated
+    private float[] manaThresholds = { 0, 25, 50, 75, 100 }; // Mana thresholds for enabling game objects
+
     private void Awake()
     {
         instance = this;
@@ -35,7 +39,7 @@ public class PlayerManaManager : MonoBehaviour
         }
         else
         {
-            AddMana(0.5f);
+            //AddMana(0.5f);
         }
     }
 
@@ -70,5 +74,26 @@ public class PlayerManaManager : MonoBehaviour
     public void UdpateManaBar()
     {
         manaBar.fillAmount = currentMana / maxMana;
+        UpdateGameObjectsBasedOnMana();
+    }
+
+    void UpdateGameObjectsBasedOnMana()
+    {
+        // Iterate through each game object and disable all
+
+        foreach (GameObject obj in gameObjects)
+        {
+            obj.SetActive(false);
+        }
+
+        // Enable the correct game object based on mana percentage
+        for (int i = 0; i < manaThresholds.Length; i++)
+        {
+            if (currentMana <= manaThresholds[i])
+            {
+                gameObjects[i].SetActive(true);
+                break;
+            }
+        }
     }
 }

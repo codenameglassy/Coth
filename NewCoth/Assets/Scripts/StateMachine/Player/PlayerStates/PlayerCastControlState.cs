@@ -14,9 +14,11 @@ public class PlayerCastControlState : PlayerState
         base.Enter();
         entity.SetMovement(false);
         //entity.SpawnPrayVfxRoutine();
-        entity.SpawnCastControlVfx();
-        entity.SmoothZoom(2f, entity.zoomTime);
+        //entity.SpawnCastControlVfx();
+        //entity.SmoothZoom(2f, entity.zoomTime);
         AudioManagerCS.instance.Play("chime");
+
+        ControableEntityManager.instance.SpawnWave();
     }
 
     public override void Exit()
@@ -31,9 +33,9 @@ public class PlayerCastControlState : PlayerState
 
         if(Time.time >= startTime + stateData.castControlTime)
         {
-            ControableEntityManager.instance.ControlTiger();
+           
          
-            stateMachine.ChangeState(entity.waitState);
+          //  stateMachine.ChangeState(entity.waitState);
             
         }
     }

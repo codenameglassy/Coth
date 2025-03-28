@@ -130,6 +130,14 @@ namespace StarterAssets
         private bool isDodgeing = false;
         [Range(0f, 3f)]
         public float directMoveBlend = 0f;
+        private PlayerEntity playerEntity;
+        [Header("Gliding")]
+        public float glideGravity = 2.0f; // Reduced gravity when gliding
+        private bool isGliding = false;
+        [Header("Skating")]
+        public float skatingSpeed;
+        private bool isSkating = false;
+       
 
         private void Awake()
         {
@@ -143,7 +151,7 @@ namespace StarterAssets
         private void Start()
         {
             _cinemachineTargetYaw = CinemachineCameraTarget.transform.rotation.eulerAngles.y;
-            
+            playerEntity = GetComponent<PlayerEntity>();
             _hasAnimator = TryGetComponent(out _animator);
             _controller = GetComponent<CharacterController>();
             _input = GetComponent<StarterAssetsInputs>();
@@ -167,13 +175,14 @@ namespace StarterAssets
             JumpAndGravity();
             GroundedCheck();
             Move();
+            
         }
 
         private void LateUpdate()
         {
             CameraRotation();
         }
-
+       
         private void AssignAnimationIDs()
         {
             _animIDSpeed = Animator.StringToHash("Speed");
@@ -195,6 +204,30 @@ namespace StarterAssets
             if (_hasAnimator)
             {
                 _animator.SetBool(_animIDGrounded, Grounded);
+            }
+        }
+
+        public bool IsGrounded()
+        {
+            return _controller.isGrounded;
+        }
+        public void HandleGlide()
+        {
+            if (_controller.isGrounded)
+            {
+                isGliding = false;
+                return;
+            }
+
+            if (Input.GetKey(KeyCode.Space) && !_controller.isGrounded)
+            {
+                isGliding = true;
+                Debug.Log("Gliding On");
+            }
+            else
+            {
+                isGliding = false;
+                Debug.Log("Gliding Off");
             }
         }
 
@@ -224,8 +257,17 @@ namespace StarterAssets
             // set target speed based on move speed, sprint speed and if sprint is pressed
             if (canMove)
             {
-                targetSpeed = _input.sprint ? SprintSpeed : MoveSpeed;
+                if (isSkating)
+                {
+                    targetSpeed = skatingSpeed;
+                }
+                else
+                {
+                    targetSpeed = _input.sprint ? SprintSpeed : MoveSpeed;
+                }
             }
+
+           
 
            
             // a simplistic acceleration and deceleration designed to be easy to remove, replace, or iterate upon
@@ -341,9 +383,23 @@ namespace StarterAssets
                 // Jump
                 if (_input.jump && _jumpTimeoutDelta <= 0.0f)
                 {
-                    return;
+                    //return;
+
+                    
+                    float newJumpHeight;
+                    if (playerEntity.CheckIfPropelledJump())
+                    {
+                        newJumpHeight = playerEntity.entityData.propelledJumpHeight;
+                        AudioManagerCS.instance.Play("swoosh");
+                    }
+                    else
+                    {
+                        newJumpHeight = JumpHeight;
+                        AudioManagerCS.instance.Play("boyJump");
+                    }
+
                     // the square root of H * -2 * G = how much velocity needed to reach desired height
-                    _verticalVelocity = Mathf.Sqrt(JumpHeight * -2f * Gravity);
+                    _verticalVelocity = Mathf.Sqrt(newJumpHeight * -2f * Gravity);
 
                     // update animator if using character
                     if (_hasAnimator)
@@ -381,13 +437,37 @@ namespace StarterAssets
                 _input.jump = false;
             }
 
+
+            Debug.Log(_verticalVelocity);
+
             // apply gravity over time if under terminal (multiply by delta time twice to linearly speed up over time)
-            if (_verticalVelocity < _terminalVelocity)
-            {
-                _verticalVelocity += Gravity * Time.deltaTime;
-            }
+               if (_verticalVelocity < _terminalVelocity)
+               {
+                   float gravity = isGliding ? glideGravity : Gravity;
+
+                   _verticalVelocity += gravity * Time.deltaTime;
+               }
         }
 
+        public void ResetTerminalVelocity()
+        {
+            _verticalVelocity = 0f;
+        }
+
+        public float GetPlayerVelocity()
+        {
+            return _controller.velocity.magnitude;
+        }
+
+        public void SetSkating(bool bool_)
+        {
+            isSkating = bool_;
+        }
+
+        public float JumpTimeoutDelta()
+        {
+            return _jumpTimeoutDelta;
+        }
         private static float ClampAngle(float lfAngle, float lfMin, float lfMax)
         {
             if (lfAngle < -360f) lfAngle += 360f;
